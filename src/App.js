@@ -28,18 +28,27 @@ const columns = [
 ];
 
 function App() {
-    const [list, setList] = useState([]);
+    const [users, setUsers] = useState(() => {
+        const storageUsers = JSON.parse(localStorage.getItem("users"));
+        return storageUsers ?? [];
+    });
 
     const callbackFunction = (childData) => {
         let temp = {
-            id: childData.id?.value,
+            id: +childData.id?.value,
             name: childData.name?.value,
-            age: childData.age?.value,
+            age: +childData.age?.value,
             gender: childData.gender?.value,
             address: childData.address?.value,
         };
         console.log("temp: ", temp);
-        setList((prevState) => [...prevState, temp]);
+        setUsers((prevState) => {
+            const newUsers = [...prevState, temp];
+            const jsonUsers = JSON.stringify(newUsers);
+            localStorage.setItem("users", jsonUsers);
+
+            return newUsers;
+        });
     };
 
     return (
@@ -53,7 +62,7 @@ function App() {
                         <Typography variant="h6">List User</Typography>
                         <div style={{ height: 400, width: "100%" }}>
                             <DataGrid
-                                rows={list}
+                                rows={users}
                                 columns={columns}
                                 pageSize={5}
                                 rowsPerPageOptions={[5]}

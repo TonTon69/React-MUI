@@ -63,6 +63,7 @@ function Form({ parentCallback }) {
 
         const formFields = Object.keys(formValues);
         let newFormValues = { ...formValues };
+        let flag = false;
 
         for (let i = 0; i < formFields.length; i++) {
             const currentField = formFields[i];
@@ -76,6 +77,7 @@ function Form({ parentCallback }) {
                         error: true,
                     },
                 };
+                flag = true;
             } else {
                 newFormValues = {
                     ...newFormValues,
@@ -84,11 +86,14 @@ function Form({ parentCallback }) {
                         error: false,
                     },
                 };
+                flag = false;
             }
         }
 
         setFormValues(newFormValues);
-        parentCallback(formValues);
+        if (flag === false) {
+            parentCallback(formValues);
+        }
     };
 
     return (
